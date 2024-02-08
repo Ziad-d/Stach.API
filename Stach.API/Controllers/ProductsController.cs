@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Stach.Domain.Models;
 using Stach.Domain.Repositories;
+using Stach.Domain.Specificaitions;
 
 namespace Stach.API.Controllers
 {
@@ -17,7 +18,9 @@ namespace Stach.API.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Product>>> GetProducts()
         {
-            var products = await _productsRepo.GetAllAsync();
+            var spec = new ProductWithBrandAndCategorySpecifications();
+
+            var products = await _productsRepo.GetAllWithSpecAsync(spec);
 
             return Ok(products);
         }
@@ -25,7 +28,9 @@ namespace Stach.API.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Product>> GetProductById(int id)
         {
-            var product = await _productsRepo.GetAsync(id);
+            var spec = new ProductWithBrandAndCategorySpecifications(id);
+
+            var product = await _productsRepo.GetWithSpecAsync(spec);
 
             if (product == null) 
                 return NotFound();

@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Stach.Domain.Models;
 using Stach.Domain.Repositories;
+using Stach.Domain.Specificaitions;
 using Stach.Repository.Data;
 using System;
 using System.Collections.Generic;
@@ -33,6 +34,21 @@ namespace Stach.Repository
                 return await _dbContext.Set<Product>().Where(p => p.Id == id).Include(p => p.Brand).Include(p => p.Category).FirstOrDefaultAsync() as T;
 
             return await _dbContext.Set<T>().FindAsync(id);
+        }
+
+        public async Task<IEnumerable<T>> GetAllWithSpecAsync(ISpecifications<T> spec)
+        {
+            return await ApplySpecifications(spec).ToListAsync();
+        }
+
+        public async Task<T?> GetWithSpecAsync(ISpecifications<T> spec)
+        {
+            return await ApplySpecifications(spec).FirstOrDefaultAsync();
+        }
+
+        private IQueryable<T> ApplySpecifications(ISpecifications<T> spec)
+        {
+            return SpecificationEvaluator<T>.GetQuery(_dbContext.Set<T>(), spec);
         }
     }
 }

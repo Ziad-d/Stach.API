@@ -1,4 +1,5 @@
 ﻿using Stach.Domain.Models;
+using Stach.Domain.Specificaitions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,5 +12,8 @@ namespace Stach.Domain.Repositories
     {
         Task<IEnumerable<T>> GetAllAsync();
         Task<T?> GetAsync(int id);
+
+        Task<IEnumerable<T>> GetAllWithSpecAsync(ISpecifications<T> spec);
+        Task<T?> GetWithSpecAsync(ISpecifications<T> spec);
     }
 }
