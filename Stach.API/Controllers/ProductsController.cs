@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Stach.API.DTOs;
 using Stach.Domain.Models;
 using Stach.Domain.Repositories;
 using Stach.Domain.Specificaitions;
@@ -8,34 +10,36 @@ namespace Stach.API.Controllers
 {
     public class ProductsController : BaseApiController
     {
-        private readonly IGenericRepository<Product> _productsRepo;
+        private readonly IGenericRepository<Product> _repository;
+        private readonly IMapper _mapper;
 
-        public ProductsController(IGenericRepository<Product> productsRepo)
+        public ProductsController(IGenericRepository<Product> repository, IMapper mapper)
         {
-            _productsRepo = productsRepo;
+            _repository = repository;
+            _mapper = mapper;
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Product>>> GetProducts()
+        public async Task<ActionResult<IEnumerable<ProductToReturnDTO>>> GetProducts()
         {
             var spec = new ProductWithBrandAndCategorySpecifications();
 
-            var products = await _productsRepo.GetAllWithSpecAsync(spec);
+            var products = await _repository.GetAllWithSpecAsync(spec);
 
-            return Ok(products);
+            return Ok(_mapper.Map<IEnumerable<Product>, IEnumerable<ProductToReturnDTO>>(products));
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Product>> GetProductById(int id)
+        public async Task<ActionResult<ProductToReturnDTO>> GetProductById(int id)
         {
             var spec = new ProductWithBrandAndCategorySpecifications(id);
 
-            var product = await _productsRepo.GetWithSpecAsync(spec);
+            var product = await _repository.GetWithSpecAsync(spec);
 
             if (product == null) 
                 return NotFound();
 
-            return Ok(product);
+            return Ok(_mapper.Map<Product, ProductToReturnDTO>(product));
         }
     }
 }

@@ -1,4 +1,6 @@
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using Stach.API.Helpers;
 using Stach.Domain.Repositories;
 using Stach.Repository;
 using Stach.Repository.Data;
@@ -25,6 +27,8 @@ namespace Stach.API
             }); 
 
             builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+
+            builder.Services.AddAutoMapper(typeof(MappingProfiles));
             #endregion
 
             var app = builder.Build();
@@ -57,6 +61,8 @@ namespace Stach.API
             }
 
             app.UseHttpsRedirection();
+
+            app.UseStaticFiles();
 
             app.UseAuthorization();
 
