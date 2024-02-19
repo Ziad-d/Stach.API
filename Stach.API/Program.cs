@@ -2,6 +2,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Stach.API.Errors;
+using Stach.API.Extensions;
 using Stach.API.Helpers;
 using Stach.API.Middlewares;
 using Stach.Domain.Repositories;
@@ -20,37 +21,15 @@ namespace Stach.API
             // Add services to the container.
 
             builder.Services.AddControllers();
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-            builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+
+            builder.Services.AddSwaggerServices();
 
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
             {
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
-            }); 
-
-            builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
-
-            builder.Services.AddAutoMapper(typeof(MappingProfiles));
-
-            builder.Services.Configure<ApiBehaviorOptions>(options =>
-            {
-                options.InvalidModelStateResponseFactory = (actionContext) =>
-                {
-                    var errors = actionContext.ModelState.Where(P => P.Value.Errors.Count() > 0)
-                                                         .SelectMany(P => P.Value.Errors)
-                                                         .Select(E => E.ErrorMessage)
-                                                         .ToArray();
-
-                    var validationErrorResponse = new ApiValidationErrorResponse()
-                    {
-
-                        Errors = errors
-                    };
-
-                    return new BadRequestObjectResult(validationErrorResponse);
-                };
             });
+
+            builder.Services.AddApplicationServices();
             #endregion
 
             var app = builder.Build();
@@ -80,8 +59,7 @@ namespace Stach.API
 
             if (app.Environment.IsDevelopment())
             {
-                app.UseSwagger();
-                app.UseSwaggerUI();
+                app.UseSwaggerMiddleware();
             }
 
             app.UseStatusCodePagesWithReExecute("/errors/{0}");
