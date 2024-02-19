@@ -1,6 +1,9 @@
 using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Stach.API.Errors;
 using Stach.API.Helpers;
+using Stach.API.Middlewares;
 using Stach.Domain.Repositories;
 using Stach.Repository;
 using Stach.Repository.Data;
@@ -29,6 +32,25 @@ namespace Stach.API
             builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 
             builder.Services.AddAutoMapper(typeof(MappingProfiles));
+
+            builder.Services.Configure<ApiBehaviorOptions>(options =>
+            {
+                options.InvalidModelStateResponseFactory = (actionContext) =>
+                {
+                    var errors = actionContext.ModelState.Where(P => P.Value.Errors.Count() > 0)
+                                                         .SelectMany(P => P.Value.Errors)
+                                                         .Select(E => E.ErrorMessage)
+                                                         .ToArray();
+
+                    var validationErrorResponse = new ApiValidationErrorResponse()
+                    {
+
+                        Errors = errors
+                    };
+
+                    return new BadRequestObjectResult(validationErrorResponse);
+                };
+            });
             #endregion
 
             var app = builder.Build();
@@ -54,11 +76,15 @@ namespace Stach.API
 
             #region Configure Kestrel Middlewares
             // Configure the HTTP request pipeline.
+            app.UseMiddleware<ExceptionMiddleware>();
+
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+
+            app.UseStatusCodePagesWithReExecute("/errors/{0}");
 
             app.UseHttpsRedirection();
 

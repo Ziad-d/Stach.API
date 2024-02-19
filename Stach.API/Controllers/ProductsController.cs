@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Stach.API.DTOs;
+using Stach.API.Errors;
 using Stach.Domain.Models;
 using Stach.Domain.Repositories;
 using Stach.Domain.Specificaitions;
@@ -37,7 +38,7 @@ namespace Stach.API.Controllers
             var product = await _repository.GetWithSpecAsync(spec);
 
             if (product == null) 
-                return NotFound();
+                return NotFound(new ApiResponse(404));
 
             return Ok(_mapper.Map<Product, ProductToReturnDTO>(product));
         }
