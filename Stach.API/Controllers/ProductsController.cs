@@ -11,12 +11,16 @@ namespace Stach.API.Controllers
 {
     public class ProductsController : BaseApiController
     {
-        private readonly IGenericRepository<Product> _repository;
+        private readonly IGenericRepository<Product> _productRepo;
+        private readonly IGenericRepository<ProductBrand> _brandRepo;
+        private readonly IGenericRepository<ProductCategory> _categoryRepo;
         private readonly IMapper _mapper;
 
-        public ProductsController(IGenericRepository<Product> repository, IMapper mapper)
+        public ProductsController(IGenericRepository<Product> productRepo, IGenericRepository<ProductBrand> brandRepo, IGenericRepository<ProductCategory> categoryRepo, IMapper mapper)
         {
-            _repository = repository;
+            _productRepo = productRepo;
+            _brandRepo = brandRepo;
+            _categoryRepo = categoryRepo;
             _mapper = mapper;
         }
 
@@ -25,7 +29,7 @@ namespace Stach.API.Controllers
         {
             var spec = new ProductWithBrandAndCategorySpecifications();
 
-            var products = await _repository.GetAllWithSpecAsync(spec);
+            var products = await _productRepo.GetAllWithSpecAsync(spec);
 
             return Ok(_mapper.Map<IEnumerable<Product>, IEnumerable<ProductToReturnDTO>>(products));
         }
@@ -35,12 +39,28 @@ namespace Stach.API.Controllers
         {
             var spec = new ProductWithBrandAndCategorySpecifications(id);
 
-            var product = await _repository.GetWithSpecAsync(spec);
+            var product = await _productRepo.GetWithSpecAsync(spec);
 
             if (product == null) 
                 return NotFound(new ApiResponse(404));
 
             return Ok(_mapper.Map<Product, ProductToReturnDTO>(product));
+        }
+
+        [HttpGet("brands")]
+        public async Task<ActionResult<IEnumerable<ProductBrand>>> GetBrands()
+        {
+            var brands = await _brandRepo.GetAllAsync();
+
+            return Ok(brands);
+        }
+
+        [HttpGet("categories")]
+        public async Task<ActionResult<IEnumerable<ProductCategory>>> GetCategories()
+        {
+            var categories = await _categoryRepo.GetAllAsync();
+
+            return Ok(categories);
         }
     }
 }
