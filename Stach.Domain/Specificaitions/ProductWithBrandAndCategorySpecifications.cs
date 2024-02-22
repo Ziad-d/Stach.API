@@ -10,10 +10,28 @@ namespace Stach.Domain.Specificaitions
     public class ProductWithBrandAndCategorySpecifications : BaseSpecifications<Product>
     {
         // Constructor for creating an object that will be used to get all products
-        public ProductWithBrandAndCategorySpecifications()
+        public ProductWithBrandAndCategorySpecifications(string? sort)
             : base()
         {
             AllIncludes();
+
+            if (!string.IsNullOrEmpty(sort))
+            {
+                switch(sort)
+                {
+                    case "priceAsc":
+                        AddOrderBy(P => P.Price);
+                        break;
+                    case "priceDesc":
+                        AddOrderByDesc(P => P.Price);
+                        break;
+                    default:
+                        AddOrderBy(P => P.Name);
+                        break;
+                }
+            }
+            else
+                AddOrderBy(P => P.Name);
         }
 
         // Constructor for creating an object that will be used to get a specific product
