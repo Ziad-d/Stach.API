@@ -10,8 +10,9 @@ namespace Stach.Domain.Specificaitions
     public class ProductWithBrandAndCategorySpecifications : BaseSpecifications<Product>
     {
         // Constructor for creating an object that will be used to get all products
-        public ProductWithBrandAndCategorySpecifications(string? sort)
-            : base()
+        public ProductWithBrandAndCategorySpecifications(string? sort, int? brandId, int? categoryId)
+            : base(P => (!brandId.HasValue || P.BrandId == brandId.Value)
+                  && (!categoryId.HasValue || P.CategoryId == categoryId.Value))
         {
             AllIncludes();
 
