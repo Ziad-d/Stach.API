@@ -5,20 +5,20 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Stach.Domain.Specificaitions
+namespace Stach.Domain.Specificaitions.Product_Specs
 {
     public class ProductWithBrandAndCategorySpecifications : BaseSpecifications<Product>
     {
         // Constructor for creating an object that will be used to get all products
-        public ProductWithBrandAndCategorySpecifications(string? sort, int? brandId, int? categoryId)
-            : base(P => (!brandId.HasValue || P.BrandId == brandId.Value)
-                  && (!categoryId.HasValue || P.CategoryId == categoryId.Value))
+        public ProductWithBrandAndCategorySpecifications(ProductSpecParams specParams)
+            : base(P => (!specParams.BrandId.HasValue || P.BrandId == specParams.BrandId.Value)
+                  && (!specParams.CategoryId.HasValue || P.CategoryId == specParams.CategoryId.Value))
         {
             AllIncludes();
 
-            if (!string.IsNullOrEmpty(sort))
+            if (!string.IsNullOrEmpty(specParams.Sort))
             {
-                switch(sort)
+                switch (specParams.Sort)
                 {
                     case "priceAsc":
                         AddOrderBy(P => P.Price);
@@ -33,6 +33,8 @@ namespace Stach.Domain.Specificaitions
             }
             else
                 AddOrderBy(P => P.Name);
+
+            ApplyPagination((specParams.PageIndex - 1) * specParams.PageSize, specParams.PageSize);
         }
 
         // Constructor for creating an object that will be used to get a specific product

@@ -6,6 +6,7 @@ using Stach.API.Errors;
 using Stach.Domain.Models;
 using Stach.Domain.Repositories;
 using Stach.Domain.Specificaitions;
+using Stach.Domain.Specificaitions.Product_Specs;
 
 namespace Stach.API.Controllers
 {
@@ -25,9 +26,9 @@ namespace Stach.API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IReadOnlyList<ProductToReturnDTO>>> GetProducts(string? sort, int? brandId, int? categoryId)
+        public async Task<ActionResult<IReadOnlyList<ProductToReturnDTO>>> GetProducts([FromQuery] ProductSpecParams specParams)
         {
-            var spec = new ProductWithBrandAndCategorySpecifications(sort, brandId, categoryId);
+            var spec = new ProductWithBrandAndCategorySpecifications(specParams);
 
             var products = await _productRepo.GetAllWithSpecAsync(spec);
 
