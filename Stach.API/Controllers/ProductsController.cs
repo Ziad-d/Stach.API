@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Stach.API.DTOs;
 using Stach.API.Errors;
+using Stach.API.Helpers;
 using Stach.Domain.Models;
 using Stach.Domain.Repositories;
 using Stach.Domain.Specificaitions;
@@ -32,7 +33,13 @@ namespace Stach.API.Controllers
 
             var products = await _productRepo.GetAllWithSpecAsync(spec);
 
-            return Ok(_mapper.Map<IReadOnlyList<Product>, IReadOnlyList<ProductToReturnDTO>>(products));
+            var data = _mapper.Map<IReadOnlyList<Product>, IReadOnlyList<ProductToReturnDTO>>(products);
+
+            var countSpec = new ProductWithFiltrationForCountSpecification(specParams);
+
+            var count = await _productRepo.GetCountAsync(countSpec);
+
+            return Ok(new Pagination<ProductToReturnDTO>(specParams.PageIndex, specParams.PageSize, count, data));
         }
 
         [HttpGet("{id}")]
