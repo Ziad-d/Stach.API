@@ -8,6 +8,7 @@ using Stach.API.Middlewares;
 using Stach.Domain.Repositories;
 using Stach.Repository;
 using Stach.Repository.Data;
+using StackExchange.Redis;
 
 namespace Stach.API
 {
@@ -27,6 +28,12 @@ namespace Stach.API
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
             {
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+            });
+
+            builder.Services.AddSingleton<IConnectionMultiplexer>((serviceProvider) =>
+            {
+                var connection = builder.Configuration.GetConnectionString("Redis");
+                return ConnectionMultiplexer.Connect(connection);
             });
 
             builder.Services.AddApplicationServices();

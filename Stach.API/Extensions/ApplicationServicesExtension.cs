@@ -13,6 +13,8 @@ namespace Stach.API.Extensions
         {
             services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 
+            services.AddScoped(typeof(IBasketRepository), typeof(BasketRepository));
+
             services.AddAutoMapper(typeof(MappingProfiles));
 
             services.Configure<ApiBehaviorOptions>(options =>

@@ -11,8 +11,9 @@ namespace Stach.Domain.Specificaitions.Product_Specs
     {
         // Constructor for creating an object that will be used to get all products
         public ProductWithBrandAndCategorySpecifications(ProductSpecParams specParams)
-            : base(P => (!specParams.BrandId.HasValue || P.BrandId == specParams.BrandId.Value)
-                  && (!specParams.CategoryId.HasValue || P.CategoryId == specParams.CategoryId.Value))
+            : base(P => (string.IsNullOrEmpty(specParams.Search) || P.Name.ToLower().Contains(specParams.Search))
+                  &&    (!specParams.BrandId.HasValue || P.BrandId == specParams.BrandId.Value)
+                  &&    (!specParams.CategoryId.HasValue || P.CategoryId == specParams.CategoryId.Value))
         {
             AllIncludes();
 
