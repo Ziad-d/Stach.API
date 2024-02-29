@@ -1,10 +1,12 @@
 using AutoMapper;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Stach.API.Errors;
 using Stach.API.Extensions;
 using Stach.API.Helpers;
 using Stach.API.Middlewares;
+using Stach.Domain.Models.Identity;
 using Stach.Domain.Repositories;
 using Stach.Repository;
 using Stach.Repository.Data;
@@ -43,6 +45,11 @@ namespace Stach.API
             });
 
             builder.Services.AddApplicationServices();
+
+            builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
+            {
+
+            }).AddEntityFrameworkStores<AppIdentityDbContext>();
             #endregion
 
             var app = builder.Build();
@@ -63,6 +70,9 @@ namespace Stach.API
                 await ApplicationDbContextSeed.SeedAsync(_dbContext); // Data Seeding
 
                 await _identityDbContext.Database.MigrateAsync(); // Update-Database
+
+                var _userManager = services.GetRequiredService<UserManager<AppUser>>();
+                await AppIdentityDbContextSeed.SeedUsersAsync(_userManager);
             }
             catch (Exception ex)
             {
