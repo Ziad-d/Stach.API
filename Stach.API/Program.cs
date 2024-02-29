@@ -8,6 +8,7 @@ using Stach.API.Middlewares;
 using Stach.Domain.Repositories;
 using Stach.Repository;
 using Stach.Repository.Data;
+using Stach.Repository.Identity;
 using StackExchange.Redis;
 
 namespace Stach.API
@@ -30,6 +31,11 @@ namespace Stach.API
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
             });
 
+            builder.Services.AddDbContext<AppIdentityDbContext>(options =>
+            {
+                options.UseSqlServer(builder.Configuration.GetConnectionString("IdentityConnection"));
+            });
+
             builder.Services.AddSingleton<IConnectionMultiplexer>((serviceProvider) =>
             {
                 var connection = builder.Configuration.GetConnectionString("Redis");
@@ -47,12 +53,16 @@ namespace Stach.API
 
             var _dbContext = services.GetRequiredService<ApplicationDbContext>();
 
+            var _identityDbContext = services.GetRequiredService<AppIdentityDbContext>();
+
             var loggerFactory = services.GetRequiredService<ILoggerFactory>();
 
             try
             {
                 await _dbContext.Database.MigrateAsync(); // Update-Database
                 await ApplicationDbContextSeed.SeedAsync(_dbContext); // Data Seeding
+
+                await _identityDbContext.Database.MigrateAsync(); // Update-Database
             }
             catch (Exception ex)
             {

@@ -14,4 +14,8 @@
     <ProjectReference Include="..\Stach.Domain\Stach.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Identity\DataSeed\" />
+  </ItemGroup>
+
 </Project>
