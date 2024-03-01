@@ -58,8 +58,10 @@ namespace Stach.API
 
             var services = scope.ServiceProvider;
 
+            // Create object from class ApplicationDbContext Explicitly
             var _dbContext = services.GetRequiredService<ApplicationDbContext>();
 
+            // Create object from class AppIdentityDbContext Explicitly
             var _identityDbContext = services.GetRequiredService<AppIdentityDbContext>();
 
             var loggerFactory = services.GetRequiredService<ILoggerFactory>();
@@ -71,8 +73,9 @@ namespace Stach.API
 
                 await _identityDbContext.Database.MigrateAsync(); // Update-Database
 
+                // Create object from class UserManager Explicitly
                 var _userManager = services.GetRequiredService<UserManager<AppUser>>();
-                await AppIdentityDbContextSeed.SeedUsersAsync(_userManager);
+                await AppIdentityDbContextSeed.SeedUsersAsync(_userManager); // Data Seeding
             }
             catch (Exception ex)
             {
