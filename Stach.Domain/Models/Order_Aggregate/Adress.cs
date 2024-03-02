@@ -8,6 +8,19 @@ namespace Stach.Domain.Models.Order_Aggregate
 {
     public class Adress
     {
+        public Adress(string firstName, string lName, string street, string city, string country)
+        {
+            FirstName = firstName;
+            LName = lName;
+            Street = street;
+            City = city;
+            Country = country;
+        }
+        public Adress()
+        {
+            
+        }
+
         public string FirstName { get; set; }
         public string LName { get; set; }
         public string Street { get; set; }

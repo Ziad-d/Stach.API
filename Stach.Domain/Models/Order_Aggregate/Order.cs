@@ -9,16 +9,35 @@ namespace Stach.Domain.Models.Order_Aggregate
 {
     public class Order : Base
     {
+        public Order(string buyerEmail, Adress shippingAddress, DeliveryMethod deliveryMethod, ICollection<OrderItem> items, decimal subtotal)
+        {
+            BuyerEmail = buyerEmail;
+            ShippingAddress = shippingAddress;
+            DeliveryMethod = deliveryMethod;
+            Items = items;
+            Subtotal = subtotal;
+        }
+        public Order()
+        {
+            
+        }
+
         public string BuyerEmail { get; set; }
-        public DateTimeOffset OrderDate { get; set; }
-        public OrderStatus Status { get; set; }
+        public DateTimeOffset OrderDate { get; set; } = DateTimeOffset.UtcNow;
+        public OrderStatus Status { get; set; } = OrderStatus.Pending;
         public Adress ShippingAddress { get; set; }
+
+        //public int DeliveryMethodId { get; set; } // Foreign Key
+
         public DeliveryMethod DeliveryMethod { get; set; }  // Navigational Property [One]
         public ICollection<OrderItem> Items { get; set; } = new HashSet<OrderItem>(); // Navigational Property [Many]
+
         public decimal Subtotal { get; set; }
 
         //[NotMapped]
         //public decimal Total => Subtotal + DeliveryMethod.Cost;
         public decimal GetTotal() => Subtotal + DeliveryMethod.Cost;
+
+        public string PaymentIntentId { get; set; } = string.Empty;
     }
 }
