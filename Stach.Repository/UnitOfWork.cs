@@ -3,6 +3,7 @@ using Stach.Domain.Models;
 using Stach.Domain.Repositories;
 using Stach.Repository.Data;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,12 +14,12 @@ namespace Stach.Repository
     public class UnitOfWork : IUnitOfWork
     {
         private readonly ApplicationDbContext _dbContext;
-        private readonly Dictionary<string, GenericRepository<Base>> _repositories;
+        private Hashtable _repositories;
 
         public UnitOfWork(ApplicationDbContext dbContext)
         {
             _dbContext = dbContext;
-            _repositories = new Dictionary<string, GenericRepository<Base>>();
+            _repositories = new Hashtable();
         }
 
         public IGenericRepository<TEntity> GetRepo<TEntity>() where TEntity : Base
@@ -27,10 +28,10 @@ namespace Stach.Repository
             var key = typeof(TEntity).Name;
 
             // 2. Checking if this key already exists in the dictionary, if not
-            if(!_repositories.ContainsKey(key) )
+            if(!_repositories.ContainsKey(key))
             {
                 // 2.1. Creating new GenericRepository of that entity
-                var repository = new GenericRepository<TEntity>(_dbContext) as GenericRepository<Base>;
+                var repository = new GenericRepository<TEntity>(_dbContext);
                 // 2.2. Adding it to the dictionary with the key as its name
                 _repositories.Add(key, repository);
             }

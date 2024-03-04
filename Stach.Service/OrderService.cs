@@ -21,37 +21,40 @@ namespace Stach.Service
             _basketRepo = basketRepo;
             _unitOfWork = unitOfWork;
         }
+
         public async Task<Order?> CreateOrderAsync(string buyerEmail, string basketId, int deliveryMethodId, Address shippingAddress)
         {
-            // 1. Get Basket from Basket Repo
+            // 1. Getting Basket from Basket Repo
             var basket = await _basketRepo.GetBasketAsync(basketId);
 
-            // 2. Get Selected Items at Basket from Product Repo
+            // 2. Getting Selected Items at Basket from Product Repo
             var orderItems = new List<OrderItem>();
 
             if(basket?.Items?.Count > 0)
             {
+                // 2.1. Getting product repository
+                var productRepository = _unitOfWork.GetRepo<Product>();
                 foreach (var item in basket.Items)
                 {
-                    var product = await _unitOfWork.GetRepo<Product>().GetAsync(item.Id);
+                    var product = await productRepository.GetAsync(item.Id);
                     var productItemOrdered = new ProductItemOrdered(item.Id, product.Name, product.PictureUrl);
                     var orderItem = new OrderItem(productItemOrdered, product.Price, item.Quantity);
                     orderItems.Add(orderItem);
                 }
             }
 
-            // 3. Calculate Subtotal
+            // 3. Calculating Subtotal
             var subTotal = orderItems.Sum(orderItem => orderItem.Price * orderItem.Quantity);
 
-            // 4. Get DelivaryMethod from DelivaryMethod Repo
-            var delivaryMethod = await _unitOfWork.GetRepo<DeliveryMethod>().GetAsync(deliveryMethodId);
+            // 4. Getting DelivaryMethod from DelivaryMethod Repo
+            var deliveryMethod = await _unitOfWork.GetRepo<DeliveryMethod>().GetAsync(deliveryMethodId);
 
-            // 5. Create Order
-            var order = new Order(buyerEmail, shippingAddress, delivaryMethod, orderItems, subTotal);
+            // 5. Creating Order
+            var order = new Order(buyerEmail, shippingAddress, deliveryMethod, orderItems, subTotal);
 
             await _unitOfWork.GetRepo<Order>().AddAsync(order);
 
-            // 6. Save to Database
+            // 6. Saving to Database
             var result = await _unitOfWork.CompleteAsync();
 
             if (result <= 0)
