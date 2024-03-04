@@ -35,7 +35,7 @@ namespace Stach.Repository.Data.Migrations
                     OrderDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
                     Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ShippingAddress_FirstName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ShippingAddress_LName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ShippingAddress_LastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ShippingAddress_Street = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ShippingAddress_City = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ShippingAddress_Country = table.Column<string>(type: "nvarchar(max)", nullable: false),

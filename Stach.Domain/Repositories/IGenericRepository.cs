@@ -17,5 +17,9 @@ namespace Stach.Domain.Repositories
         Task<T?> GetWithSpecAsync(ISpecifications<T> spec);
 
         Task<int> GetCountAsync(ISpecifications<T> spec);
+
+        Task AddAsync(T entity);
+        void Update(T entity);
+        void Delete(T entity);
     }
 }

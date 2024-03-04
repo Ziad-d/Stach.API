@@ -2,8 +2,11 @@
 using Microsoft.AspNetCore.Mvc;
 using Stach.API.Errors;
 using Stach.API.Helpers;
+using Stach.Domain;
 using Stach.Domain.Repositories;
+using Stach.Domain.Services;
 using Stach.Repository;
+using Stach.Service;
 
 namespace Stach.API.Extensions
 {
@@ -11,7 +14,11 @@ namespace Stach.API.Extensions
     {
         public static IServiceCollection AddApplicationServices(this IServiceCollection services)
         {
-            services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+            services.AddScoped(typeof(IOrderService), typeof(OrderService));
+
+            services.AddScoped(typeof(IUnitOfWork), typeof(UnitOfWork));
+
+            //services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 
             services.AddScoped(typeof(IBasketRepository), typeof(BasketRepository));
 

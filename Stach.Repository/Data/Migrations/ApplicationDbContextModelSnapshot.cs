@@ -191,7 +191,7 @@ namespace Stach.Repository.Data.Migrations
                         .OnDelete(DeleteBehavior.SetNull)
                         .IsRequired();
 
-                    b.OwnsOne("Stach.Domain.Models.Order_Aggregate.Adress", "ShippingAddress", b1 =>
+                    b.OwnsOne("Stach.Domain.Models.Order_Aggregate.Address", "ShippingAddress", b1 =>
                         {
                             b1.Property<int>("OrderId")
                                 .HasColumnType("int");
@@ -208,7 +208,7 @@ namespace Stach.Repository.Data.Migrations
                                 .IsRequired()
                                 .HasColumnType("nvarchar(max)");
 
-                            b1.Property<string>("LName")
+                            b1.Property<string>("LastName")
                                 .IsRequired()
                                 .HasColumnType("nvarchar(max)");
 

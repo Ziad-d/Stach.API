@@ -18,6 +18,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Stach.Repository\Stach.Repository.csproj" />
+    <ProjectReference Include="..\Stach.Service\Stach.Service.csproj" />
   </ItemGroup>
 
 </Project>

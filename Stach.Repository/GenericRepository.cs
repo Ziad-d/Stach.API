@@ -36,6 +36,7 @@ namespace Stach.Repository
             return await _dbContext.Set<T>().FindAsync(id);
         }
 
+
         public async Task<IReadOnlyList<T>> GetAllWithSpecAsync(ISpecifications<T> spec)
         {
             return await ApplySpecifications(spec).ToListAsync();
@@ -54,6 +55,21 @@ namespace Stach.Repository
         private IQueryable<T> ApplySpecifications(ISpecifications<T> spec)
         {
             return SpecificationEvaluator<T>.GetQuery(_dbContext.Set<T>(), spec);
+        }
+
+        public async Task AddAsync(T entity)
+        {
+            await _dbContext.Set<T>().AddAsync(entity);
+        }
+
+        public void Update(T entity)
+        {
+            _dbContext.Update(entity);
+        }
+
+        public void Delete(T entity)
+        {
+            _dbContext.Set<T>().Remove(entity);
         }
     }
 }

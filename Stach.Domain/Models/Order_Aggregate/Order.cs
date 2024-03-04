@@ -9,7 +9,7 @@ namespace Stach.Domain.Models.Order_Aggregate
 {
     public class Order : Base
     {
-        public Order(string buyerEmail, Adress shippingAddress, DeliveryMethod deliveryMethod, ICollection<OrderItem> items, decimal subtotal)
+        public Order(string buyerEmail, Address shippingAddress, DeliveryMethod deliveryMethod, ICollection<OrderItem> items, decimal subtotal)
         {
             BuyerEmail = buyerEmail;
             ShippingAddress = shippingAddress;
@@ -25,7 +25,7 @@ namespace Stach.Domain.Models.Order_Aggregate
         public string BuyerEmail { get; set; }
         public DateTimeOffset OrderDate { get; set; } = DateTimeOffset.UtcNow;
         public OrderStatus Status { get; set; } = OrderStatus.Pending;
-        public Adress ShippingAddress { get; set; }
+        public Address ShippingAddress { get; set; }
 
         //public int DeliveryMethodId { get; set; } // Foreign Key
 
