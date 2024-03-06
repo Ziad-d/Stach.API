@@ -12,10 +12,21 @@ namespace Stach.Domain.Specificaitions.Order_Specs
         public OrderSpecifications(string buyerEmail)
             : base(Order => Order.BuyerEmail == buyerEmail)
         {
-            Includes.Add(O => O.DeliveryMethod);
-            Includes.Add(O => O.Items);
+            AllIncludes();
 
             AddOrderByDesc(O => O.OrderDate);
+        }
+
+        public OrderSpecifications(int orderId, string buyerEmail)
+            : base(O => O.Id == orderId && O.BuyerEmail == buyerEmail)
+        {
+            AllIncludes();
+        }
+
+        private void AllIncludes()
+        {
+            Includes.Add(O => O.DeliveryMethod);
+            Includes.Add(O => O.Items);
         }
     }
 }

@@ -64,9 +64,15 @@ namespace Stach.Service
             return order;
         }
 
-        public Task<Order> GetOrderByIdForUserAsync(int orderId, string buyerEmail)
+        public Task<Order?> GetOrderByIdForUserAsync(int orderId, string buyerEmail)
         {
-            throw new NotImplementedException();
+            var orderRepo = _unitOfWork.GetRepo<Order>();
+
+            var orderSpec = new OrderSpecifications(orderId, buyerEmail);
+
+            var order = orderRepo.GetWithSpecAsync(orderSpec);
+
+            return order;
         }
 
         public async Task<IReadOnlyList<Order>> GetOrdersForUserAsync(string buyerEmail)
