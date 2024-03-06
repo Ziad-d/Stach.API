@@ -3,6 +3,7 @@ using Stach.Domain.Models;
 using Stach.Domain.Models.Order_Aggregate;
 using Stach.Domain.Repositories;
 using Stach.Domain.Services;
+using Stach.Domain.Specificaitions.Order_Specs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -68,9 +69,15 @@ namespace Stach.Service
             throw new NotImplementedException();
         }
 
-        public Task<IReadOnlyList<Order>> GetOrdersForUserAsync(string buyerEmail)
+        public async Task<IReadOnlyList<Order>> GetOrdersForUserAsync(string buyerEmail)
         {
-            throw new NotImplementedException();
+            var orderRepo = _unitOfWork.GetRepo<Order>();
+
+            var spec = new OrderSpecifications(buyerEmail);
+
+            var orders = await orderRepo.GetAllWithSpecAsync(spec);
+
+            return orders;
         }
     }
 }

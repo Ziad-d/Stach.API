@@ -13,7 +13,7 @@ namespace Stach.API.Controllers
         private readonly IOrderService _orderService;
         private readonly IMapper _mapper;
 
-        public OrdersController(IOrderService orderService, IMapper mapper) 
+        public OrdersController(IOrderService orderService, IMapper mapper)
         {
             _orderService = orderService;
             _mapper = mapper;
@@ -32,6 +32,14 @@ namespace Stach.API.Controllers
                 return BadRequest(new ApiResponse(400));
 
             return Ok(order);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<IReadOnlyList<Order>>> GetOrdersForUser(string email)
+        {
+            var orders = await _orderService.GetOrdersForUserAsync(email);
+
+            return Ok(orders);
         }
     }
 }
