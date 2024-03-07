@@ -85,5 +85,14 @@ namespace Stach.Service
 
             return orders;
         }
+
+        public Task<IReadOnlyList<DeliveryMethod>> GetDeliveryMethodsAsync()
+        {
+            var deliveryMethodsRepo = _unitOfWork.GetRepo<DeliveryMethod>();
+
+            var deliveryMethods = deliveryMethodsRepo.GetAllAsync();
+
+            return deliveryMethods;
+        }
     }
 }

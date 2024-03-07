@@ -55,5 +55,13 @@ namespace Stach.API.Controllers
 
             return Ok(_mapper.Map<OrderToReturnDTO>(order));
         }
+
+        [HttpGet("deliveryMethods")]
+        public async Task<ActionResult<IReadOnlyList<DeliveryMethod>>> GetDeliveryMethods()
+        {
+            var deliveryMethods = await _orderService.GetDeliveryMethodsAsync();
+
+            return Ok(deliveryMethods);
+        }
     }
 }
