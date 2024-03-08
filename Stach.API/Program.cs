@@ -46,10 +46,7 @@ namespace Stach.API
 
             builder.Services.AddApplicationServices();
 
-            builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
-            {
-
-            }).AddEntityFrameworkStores<AppIdentityDbContext>();
+            builder.Services.AddIdentityServices();
             #endregion
 
             var app = builder.Build();

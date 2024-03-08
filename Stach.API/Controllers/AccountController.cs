@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Stach.API.DTOs;
 using Stach.API.Errors;
 using Stach.Domain.Models.Identity;
+using Stach.Domain.Services;
 
 namespace Stach.API.Controllers
 {
@@ -11,11 +12,13 @@ namespace Stach.API.Controllers
     {
         private readonly UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signInManager;
+        private readonly IAuthService _authService;
 
-        public AccountController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager)
+        public AccountController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, IAuthService authService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _authService = authService;
         }
 
         [HttpPost("login")] // POST: /api/account/login
@@ -33,7 +36,7 @@ namespace Stach.API.Controllers
             {
                 DisplayName = user.DisplayName,
                 Email = user.Email,
-                Token = "Here will be the token"
+                Token = await _authService.CreateTokenAsync(user, _userManager)
             });
         }
 
@@ -56,7 +59,7 @@ namespace Stach.API.Controllers
             {
                 DisplayName = user.DisplayName,
                 Email = user.Email,
-                Token = "Here will be token"
+                Token = await _authService.CreateTokenAsync(user, _userManager)
             });
         }
     }
