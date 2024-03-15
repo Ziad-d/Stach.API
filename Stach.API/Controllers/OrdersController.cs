@@ -6,6 +6,7 @@ using Stach.API.Errors;
 using Stach.Domain.Models.Order_Aggregate;
 using Stach.Domain.Services;
 using StackExchange.Redis;
+using System.Security.Claims;
 using Order = Stach.Domain.Models.Order_Aggregate.Order;
 
 namespace Stach.API.Controllers
@@ -26,9 +27,11 @@ namespace Stach.API.Controllers
         [HttpPost] // POST: /api/Orders
         public async Task<ActionResult<OrderToReturnDTO>> CreateOrder(OrderDTO orderDTO)
         {
+            var buyerEmail = User.FindFirstValue(ClaimTypes.Email);
+
             var address = _mapper.Map<AddressDTO, Address>(orderDTO.ShippingAddress);
 
-            var order = await _orderService.CreateOrderAsync(orderDTO.BuyerEmail, orderDTO.BasketId, orderDTO.DeliveryMethodId, address);
+            var order = await _orderService.CreateOrderAsync(buyerEmail, orderDTO.BasketId, orderDTO.DeliveryMethodId, address);
 
             if (order == null)
                 return BadRequest(new ApiResponse(400));
@@ -37,9 +40,11 @@ namespace Stach.API.Controllers
         }
 
         [HttpGet] // GET: /api/Orders?email=ziad.saleh@linkdev.com
-        public async Task<ActionResult<IReadOnlyList<OrderToReturnDTO>>> GetOrdersForUser(string email)
+        public async Task<ActionResult<IReadOnlyList<OrderToReturnDTO>>> GetOrdersForUser()
         {
-            var orders = await _orderService.GetOrdersForUserAsync(email);
+            var buyerEmail = User.FindFirstValue(ClaimTypes.Email);
+
+            var orders = await _orderService.GetOrdersForUserAsync(buyerEmail);
 
             return Ok(_mapper.Map<IReadOnlyList<Order>, IReadOnlyList<OrderToReturnDTO>>(orders));
         }
@@ -47,9 +52,11 @@ namespace Stach.API.Controllers
         [ProducesResponseType(typeof(OrderToReturnDTO), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)]
         [HttpGet("{id}")] // GET: /api/Orders/1?email=ziad.saleh@linkdev.com
-        public async Task<ActionResult<OrderToReturnDTO>> GetOrderForUser(int id, string email)
+        public async Task<ActionResult<OrderToReturnDTO>> GetOrderForUser(int id)
         {
-            var order = await _orderService.GetOrderByIdForUserAsync(id, email);
+            var buyerEmail = User.FindFirstValue(ClaimTypes.Email);
+
+            var order = await _orderService.GetOrderByIdForUserAsync(id, buyerEmail);
 
             if (order == null) return NotFound(new ApiResponse(404));
 
