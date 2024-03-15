@@ -1,10 +1,13 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Stach.API.DTOs;
 using Stach.API.Errors;
+using Stach.API.Extensions;
 using Stach.Domain.Models.Identity;
 using Stach.Domain.Services;
+using System.Security.Claims;
 
 namespace Stach.API.Controllers
 {
@@ -13,12 +16,14 @@ namespace Stach.API.Controllers
         private readonly UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signInManager;
         private readonly IAuthService _authService;
+        private readonly IMapper _mapper;
 
-        public AccountController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, IAuthService authService)
+        public AccountController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, IAuthService authService, IMapper mapper)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _authService = authService;
+            _mapper = mapper;
         }
 
         [HttpPost("login")] // POST: /api/account/login
@@ -61,6 +66,31 @@ namespace Stach.API.Controllers
                 Email = user.Email,
                 Token = await _authService.CreateTokenAsync(user, _userManager)
             });
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<UserDTO>> GetCurrentUser()
+        {
+            var email = User.FindFirstValue(ClaimTypes.Email);
+
+            var user = await _userManager.FindByEmailAsync(email);
+
+            return Ok(new UserDTO
+            {
+                DisplayName= user.DisplayName,
+                Email = user.Email,
+                Token = await _authService.CreateTokenAsync(user, _userManager)
+            });
+        }
+
+        [HttpGet("address")]
+        public async Task <ActionResult<AddressDTO>> GetUserAddress()
+        {
+            var user = await _userManager.FindUserWithAddressAsync(User);
+
+            var address = _mapper.Map<AddressDTO>(user.Address);
+
+            return Ok(address);
         }
     }
 }

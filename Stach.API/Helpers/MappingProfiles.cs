@@ -18,6 +18,7 @@ namespace Stach.API.Helpers
             CreateMap<BasketItemDTO, BasketItem>();
 
             CreateMap<AddressDTO, Address>();
+            CreateMap<Address, AddressDTO>();
 
             CreateMap<Order, OrderToReturnDTO>()
                 .ForMember(d => d.DeliveryMethod, O => O.MapFrom(s => s.DeliveryMethod.ShortName))
