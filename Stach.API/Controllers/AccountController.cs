@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -83,6 +84,7 @@ namespace Stach.API.Controllers
             });
         }
 
+        [Authorize]
         [HttpGet("address")]
         public async Task <ActionResult<AddressDTO>> GetUserAddress()
         {
