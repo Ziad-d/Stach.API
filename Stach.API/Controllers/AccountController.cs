@@ -69,7 +69,8 @@ namespace Stach.API.Controllers
             });
         }
 
-        [HttpGet]
+        [Authorize]
+        [HttpGet]   // GET: /api/account
         public async Task<ActionResult<UserDTO>> GetCurrentUser()
         {
             var email = User.FindFirstValue(ClaimTypes.Email);
@@ -85,14 +86,36 @@ namespace Stach.API.Controllers
         }
 
         [Authorize]
-        [HttpGet("address")]
-        public async Task <ActionResult<AddressDTO>> GetUserAddress()
+        [HttpGet("address")]    // GET: /api/account/address
+        public async Task<ActionResult<AddressDTO>> GetUserAddress()
         {
             var user = await _userManager.FindUserWithAddressAsync(User);
 
             var address = _mapper.Map<AddressDTO>(user.Address);
 
             return Ok(address);
+        }
+
+        [Authorize]
+        [HttpPut("address")]   // PUT: /api/account/address
+        public async Task<ActionResult<AddressDTO>> UpdateUserAddress(AddressDTO updatedAddress)
+        {
+            var user = await _userManager.FindUserWithAddressAsync(User);
+
+            if (user == null) return Unauthorized(new ApiResponse(401));
+
+            var address = _mapper.Map<AddressDTO, Address>(updatedAddress);
+
+            // so that the new object would have the same id as the current object, avoiding INSERT statement.
+            address.Id = user.Address.Id;
+            
+            user.Address = address;
+            
+            var result = await _userManager.UpdateAsync(user);
+
+            if (!result.Succeeded) return BadRequest(new ApiResponse(400));
+
+            return Ok(updatedAddress);
         }
     }
 }

@@ -3,6 +3,9 @@ using Stach.API.DTOs;
 using Stach.Domain.Models;
 using Stach.Domain.Models.Order_Aggregate;
 
+using UserAddress = Stach.Domain.Models.Identity.Address;
+using OrderAddress = Stach.Domain.Models.Order_Aggregate.Address;
+
 namespace Stach.API.Helpers
 {
     public class MappingProfiles : Profile
@@ -17,8 +20,9 @@ namespace Stach.API.Helpers
             CreateMap<CustomerBasketDTO, CustomerBasket>();
             CreateMap<BasketItemDTO, BasketItem>();
 
-            CreateMap<AddressDTO, Address>();
-            CreateMap<Address, AddressDTO>();
+            CreateMap<AddressDTO, OrderAddress>();
+
+            CreateMap<UserAddress, AddressDTO>().ReverseMap();
 
             CreateMap<Order, OrderToReturnDTO>()
                 .ForMember(d => d.DeliveryMethod, O => O.MapFrom(s => s.DeliveryMethod.ShortName))
