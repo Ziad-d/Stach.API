@@ -49,6 +49,9 @@ namespace Stach.API.Controllers
         [HttpPost("register")] // POST: /api/account/register
         public async Task<ActionResult<UserDTO>> Register(RegisterDTO model)
         {
+            if (CheckEmailExists(model.Email).Result.Value)
+                return BadRequest(new ApiValidationErrorResponse() { Errors = new string[] { "email already exists!" } });
+
             var user = new AppUser
             {
                 DisplayName = model.DisplayName,
@@ -59,7 +62,7 @@ namespace Stach.API.Controllers
 
             var result = await _userManager.CreateAsync(user, model.Password);
             if (result.Succeeded is false)
-                return BadRequest(new ApiResponse(400));
+                return BadRequest(new ApiResponse(400, "there is a problem with this user!"));
 
             return Ok(new UserDTO
             {
@@ -116,6 +119,13 @@ namespace Stach.API.Controllers
             if (!result.Succeeded) return BadRequest(new ApiResponse(400));
 
             return Ok(updatedAddress);
+        }
+
+        [Authorize]
+        [HttpGet("emailexists")]
+        public async Task<ActionResult<bool>> CheckEmailExists(string email)
+        {
+            return await _userManager.FindByEmailAsync(email) is not null;
         }
     }
 }
