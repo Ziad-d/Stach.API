@@ -58,18 +58,12 @@ namespace Stach.Repository
         }
 
         public async Task AddAsync(T entity)
-        {
-            await _dbContext.Set<T>().AddAsync(entity);
-        }
+            => await _dbContext.Set<T>().AddAsync(entity);
 
         public void Update(T entity)
-        {
-            _dbContext.Update(entity);
-        }
+            => _dbContext.Set<T>().Update(entity);
 
         public void Delete(T entity)
-        {
-            _dbContext.Set<T>().Remove(entity);
-        }
+            => _dbContext.Set<T>().Remove(entity);
     }
 }

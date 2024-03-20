@@ -16,11 +16,13 @@ namespace Stach.Service
     {
         private readonly IBasketRepository _basketRepo;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IPaymentService _paymentService;
 
-        public OrderService(IBasketRepository basketRepo, IUnitOfWork unitOfWork)
+        public OrderService(IBasketRepository basketRepo, IUnitOfWork unitOfWork, IPaymentService paymentService)
         {
             _basketRepo = basketRepo;
             _unitOfWork = unitOfWork;
+            _paymentService = paymentService;
         }
 
         public async Task<Order?> CreateOrderAsync(string buyerEmail, string basketId, int deliveryMethodId, Address shippingAddress)
@@ -51,7 +53,16 @@ namespace Stach.Service
             var deliveryMethod = await _unitOfWork.GetRepo<DeliveryMethod>().GetAsync(deliveryMethodId);
 
             // 5. Creating Order
-            var order = new Order(buyerEmail, shippingAddress, deliveryMethod, orderItems, subTotal);
+            //// 5.1 Getting Order with PaymentIntentId
+            //var spec = new OrderWithPaymentIntentSpec(basket.PaymentIntentId);
+            //var exOrder = await _unitOfWork.GetRepo<Order>().GetWithSpecAsync(spec);
+            //// 5.2 If Order exists, delete it
+            //if (exOrder is not null)
+            //{
+            //    _unitOfWork.GetRepo<Order>().Delete(exOrder);
+            //    await _paymentService.CreateOrUpdatePaymentIntent(basketId);
+            //}
+            var order = new Order(buyerEmail, shippingAddress, deliveryMethod, orderItems, subTotal, basket.PaymentIntentId);
 
             await _unitOfWork.GetRepo<Order>().AddAsync(order);
 

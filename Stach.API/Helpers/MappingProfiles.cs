@@ -17,8 +17,8 @@ namespace Stach.API.Helpers
                 .ForMember(d => d.Category, O => O.MapFrom(s => s.Category.Name))
                 .ForMember(d => d.PictureUrl, O => O.MapFrom<ProductPictureUrlResolver>());
 
-            CreateMap<CustomerBasketDTO, CustomerBasket>();
-            CreateMap<BasketItemDTO, BasketItem>();
+            CreateMap<CustomerBasketDTO, CustomerBasket>().ReverseMap();
+            CreateMap<BasketItemDTO, BasketItem>().ReverseMap();
 
             CreateMap<AddressDTO, OrderAddress>();
 
