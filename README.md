@@ -50,7 +50,7 @@ Here is a summary of the project's API endpoints:
 3. Get All Products Categories.
     - `GET /api/Products/Categories`
 4. Get All Products. (Sorting, Filtering, Pagination, Searching by Name)
-    - `GET /api/Products?sort=${price}&CategoryId=${TypeId}&BrandId=${BrandId}&PageSize=${PageSize}&PageIndex=${PageIndex}&search=${Name}`
+    - `GET /api/Products?sort=${price}&CategoryId=${CategoryId}&BrandId=${BrandId}&PageSize=${PageSize}&PageIndex=${PageIndex}&search=${Name}`
 
 #### Basket
 1. Get Basket By Id.
