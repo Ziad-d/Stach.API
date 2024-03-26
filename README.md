@@ -59,7 +59,7 @@ Here is a summary of the project's API endpoints:
     `GET /api/Products?sort=${price}&CategoryId=${TypeId}&BrandId=${BrandId}&PageSize=${PageSize}&PageIndex=${PageIndex}&search=${Name}`
 
 #### Basket
-1. Get Basket By Id. <break>
+1. <p>Get Basket By Id.</p>
     `GET /api/Basket?Id=${id}`
 2. Create OR Update Basket.
     `POST /api/Basket`
