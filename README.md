@@ -49,13 +49,7 @@ Here is a summary of the project's API endpoints:
     - `GET /api/Products/Brands` 
 3. Get All Products Categories.
     - `GET /api/Products/Categories`
-4. Get All Products.
-    - Sort the products by price or name descending or ascending  order.
-    - Id of Category to fetch.
-    - Id of Brand to fetch.
-    - Determine the page size (Pagination).
-    - Get specific page index.
-    - Search for products by Name.
+4. Get All Products. (Sorting, Filtering, Pagination, Searching by Name)
     - `GET /api/Products?sort=${price}&CategoryId=${TypeId}&BrandId=${BrandId}&PageSize=${PageSize}&PageIndex=${PageIndex}&search=${Name}`
 
 #### Basket
