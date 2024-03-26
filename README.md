@@ -44,25 +44,25 @@ Here is a summary of the project's API endpoints:
 
 #### Products
 1. Get Product By Id.
-    `GET /api/Products/{id}`
+    - `GET /api/Products/{id}`
 2. Get All Products Brands.
-    `GET /api/Products/Brands` 
+    - `GET /api/Products/Brands` 
 3. Get All Products Categories.
-    `GET /api/Products/Categories`
+    - `GET /api/Products/Categories`
 4. Get All Products.
-    Sort the products by price or name descending or ascending  order.
-    Id of Category to fetch.
-    Id of Brand to fetch.
-    Determine the page size (Pagination).
-    Get specific page index.
-    Search for products by Name.
-    `GET /api/Products?sort=${price}&CategoryId=${TypeId}&BrandId=${BrandId}&PageSize=${PageSize}&PageIndex=${PageIndex}&search=${Name}`
+    - Sort the products by price or name descending or ascending  order.
+    - Id of Category to fetch.
+    - Id of Brand to fetch.
+    - Determine the page size (Pagination).
+    - Get specific page index.
+    - Search for products by Name.
+    - `GET /api/Products?sort=${price}&CategoryId=${TypeId}&BrandId=${BrandId}&PageSize=${PageSize}&PageIndex=${PageIndex}&search=${Name}`
 
 #### Basket
-1. <p>Get Basket By Id.</p>
-    `GET /api/Basket?Id=${id}`
+1. Get Basket By Id.
+    - `GET /api/Basket?Id=${id}`
 2. Create OR Update Basket.
-    `POST /api/Basket`
+    - `POST /api/Basket`
     ```json
     {
       "id": "basket1",
@@ -78,13 +78,13 @@ Here is a summary of the project's API endpoints:
         }
       ]
     } 
-   ```
+    ```
 3. Delete Basket By Id.
-    `DELETE /api/Basket?Id=${id}`
+    - `DELETE /api/Basket?Id=${id}`
 
 #### Identity
 1. Login as a User.
-    `POST /api/Account/login`
+    - `POST /api/Account/login`
     ```json
     {
         "Email": "ziad@gmail.com",
@@ -92,7 +92,7 @@ Here is a summary of the project's API endpoints:
     }
     ```
 2. Register a User.
-    `POST /api/Account/register`
+    - `POST /api/Account/register`
     ```json
     {
         "DisplayName":"Ziad",
@@ -102,11 +102,11 @@ Here is a summary of the project's API endpoints:
     }
     ```
 3. Get Current User.
-    `GET /api/Account/GetCurrentUser`
+    - `GET /api/Account/GetCurrentUser`
 4. Get Current User Address.
-    `DELETE /api/Categories/{id}`
+    - `DELETE /api/Categories/{id}`
 5. Update Current User Address.
-    `PUT /api/Account/UpdateCurrentUserAddress`
+    - `PUT /api/Account/UpdateCurrentUserAddress`
     ```json
     {
         "FirstName": "Ziad",
@@ -119,13 +119,13 @@ Here is a summary of the project's API endpoints:
 
 #### Orders
 1. Get All Avaliable Delivery Methods.
-    `GET /api/Orders/DeliveryMethods`
+    - `GET /api/Orders/DeliveryMethods`
 2. Get All Orders.
-    `GET /api/Orders`
+    - `GET /api/Orders`
 3. Get Order By ID.
-    `GET /api/Orders/{id}`
+    - `GET /api/Orders/{id}`
 4. Create an Order
-    `POST /api/Orders`
+    - `POST /api/Orders`
     ```json
     {
         "basketId": "basket1",
@@ -142,7 +142,7 @@ Here is a summary of the project's API endpoints:
 
 #### Payments
 1. Create Or Update PaymentIntent.
-    `POST /api/Payments?basketId=${basketId}`
+    - `POST /api/Payments?basketId=${basketId}`
 <!-- 2. Confirm Payment.
     `POST /Payments/webhook` -->
 
