@@ -14,6 +14,8 @@ namespace Stach.API.Extensions
     {
         public static IServiceCollection AddApplicationServices(this IServiceCollection services)
         {
+            services.AddSingleton(typeof(IResponseCacheService), typeof(ResponseCacheService));
+
             services.AddScoped(typeof(IPaymentService), typeof(PaymentService));
 
             services.AddScoped(typeof(IProductService), typeof(ProductService));
