@@ -24,6 +24,7 @@ namespace Stach.API.Controllers
             _mapper = mapper;
         }
 
+        [Cached(600)]
         [Authorize]
         [HttpGet]
         public async Task<ActionResult<IReadOnlyList<ProductToReturnDTO>>> GetProducts([FromQuery] ProductSpecParams specParams)
@@ -48,6 +49,7 @@ namespace Stach.API.Controllers
             return Ok(_mapper.Map<Product, ProductToReturnDTO>(product));
         }
 
+        [Cached(600)]
         [HttpGet("brands")]
         public async Task<ActionResult<IReadOnlyList<ProductBrand>>> GetBrands()
         {
@@ -56,6 +58,7 @@ namespace Stach.API.Controllers
             return Ok(brands);
         }
 
+        [Cached(600)]
         [HttpGet("categories")]
         public async Task<ActionResult<IReadOnlyList<ProductCategory>>> GetCategories()
         {
